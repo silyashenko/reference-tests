@@ -10,11 +10,29 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    const maxAge = 20;
+    const cars   = payload.data;
 
-    assert.equal(answer, 2);
+    const isOwnerElderThen = function (owner, maxAge) {
+      return owner.personalInfo.age <= maxAge;
+    };
+
+    const getYoungOwners = function (owners, maxAge) {
+      return owners.filter((owner) => {
+        return isOwnerElderThen(owner, maxAge);
+      });
+    };
+
+    const carsWithYoungOwner = cars.filter((car) => {
+      const owners       = car.owners;
+      const youngerOwner = getYoungOwners(owners, maxAge);
+
+      return youngerOwner.length > 0;
+    });
+
+    answer = carsWithYoungOwner.length;
+
+    assert.equal(answer, 3);
 
   });
 
@@ -22,11 +40,19 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    const cars = payload.data;
 
-    assert.equal(answer, 'red,yellow');
+    const colors = cars.map((car) => {
+      return car.attrs.color;
+    });
+
+    const uniqColors = colors.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+
+    answer = uniqColors.join(',');
+
+    assert.equal(answer, 'red,yellow,green,black');
 
   });
 
@@ -34,11 +60,14 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    const cars    = payload.data;
+    const carsIds = cars.map((car) => {
+      return car.id;
+    });
 
-    assert.equal(answer, '1,3,6,4,2');
+    answer = carsIds.join(',');
+
+    assert.equal(answer, '1,3,6,4,2,5');
 
   });
 
@@ -46,9 +75,11 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    const cars = payload.data;
+
+    answer = cars.reduce((total, car) => {
+      return total += car.attrs.price;
+    }, 0);
 
     assert.equal(answer, 42800);
 
@@ -58,9 +89,42 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    const cars = payload.data;
+
+    const totalPrice = function (cars) {
+      return cars.reduce((total, car) => {
+        return total += car.attrs.price;
+      }, 0);
+    };
+
+    const uniq = function (arr) {
+      return arr.filter((value, index, self) => {
+        return self.indexOf(value) === index;
+      });
+    };
+
+    const getMapOfInnerFieldBy = function (arr, field) {
+      const allElements = arr
+        .reduce((res, item) => {
+          res = res.concat(item[field]);
+          return res;
+        }, []);
+
+      return uniq(allElements);
+    };
+
+    const allOwners = getMapOfInnerFieldBy(cars, 'owners');
+
+    const john = allOwners.find((owner) => {
+      return owner.firstName.toLowerCase() === 'john';
+    });
+
+    const johnCars = cars.filter((car) => {
+      const owners = car.owners;
+      return owners.includes(john);
+    });
+
+    answer = totalPrice(johnCars);
 
     assert.equal(answer, 25000);
 
@@ -70,9 +134,28 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    const cars = payload.data;
+
+    const uniq = function (arr) {
+      return arr.filter((value, index, self) => {
+        return self.indexOf(value) === index;
+      });
+    };
+
+    const getMapOfInnerFieldBy = function (arr, field) {
+      const allElements = arr
+        .reduce((res, item) => {
+          res = res.concat(item[field]);
+          return res;
+        }, []);
+
+      return uniq(allElements);
+    };
+
+    const allOwners = getMapOfInnerFieldBy(cars, 'owners');
+    const allCities = getMapOfInnerFieldBy(allOwners, 'cities');
+
+    answer = allCities.join(',');
 
     assert.equal(answer, 'New York,Boston,Columbia,Rapture');
 

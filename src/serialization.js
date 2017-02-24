@@ -86,7 +86,7 @@ const payload = {
     },
     {
       type: 'Gun',
-      id: 5,
+      id: 4,
       attrs: {
         color: 'black',
         year: 2012,

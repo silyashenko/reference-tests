@@ -15,11 +15,11 @@ describe('payload', function () {
       return item.type === 'Car';
     });
 
-    const isOwnerElderThen = function (owner, maxAge) {
+    const isOwnerElderThen = function isOwnerElderThen (owner, maxAge) {
       return owner.personalInfo.age <= maxAge;
     };
 
-    const getYoungOwners = function (owners, maxAge) {
+    const getYoungOwners = function getYoungOwners (owners, maxAge) {
       return owners.filter((owner) => {
         return isOwnerElderThen(owner, maxAge);
       });
